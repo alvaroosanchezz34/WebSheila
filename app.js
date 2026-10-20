@@ -1,4 +1,9 @@
 (() => {
+  // Add the official business WhatsApp number here in international format:
+  // country code + number, without the leading "+" or spaces. Example: "34600111222".
+  // Leave empty until the correct number is confirmed.
+  const WHATSAPP_NUMBER = "";
+
   const menuButton = document.querySelector(".menu-toggle");
   const nav = document.querySelector("#primary-nav");
 
@@ -72,13 +77,19 @@
         "",
         "Entiendo que la fecha queda pendiente de confirmación."
       ].filter(Boolean);
-      const url = "https://wa.me/?text=" + encodeURIComponent(lines.join("\n"));
+      const recipient = WHATSAPP_NUMBER ? WHATSAPP_NUMBER : "";
+      const url = "https://wa.me/" + recipient + "?text=" + encodeURIComponent(lines.join("\n"));
 
       if (feedback) {
-        feedback.textContent = "Abriendo WhatsApp con tu solicitud. Revisa el mensaje y elige el contacto de Almare para enviarlo.";
+        feedback.textContent = WHATSAPP_NUMBER
+          ? "Abriendo el chat de Almare con tu solicitud preparada. Revisa el mensaje antes de enviarlo."
+          : "Abriendo WhatsApp con el mensaje preparado. Como falta configurar el número oficial de Almare, elige su contacto antes de enviarlo.";
       }
-      const newWindow = window.open(url, "_blank", "noopener,noreferrer");
-      if (!newWindow) {
+
+      const newWindow = window.open(url, "_blank");
+      if (newWindow) {
+        newWindow.opener = null;
+      } else {
         window.location.href = url;
       }
     });
